@@ -1,0 +1,30 @@
+.abcd {
+  color: red;
+}
+
+.bg-colr {
+  background-color: rgb(10, 10, 10);
+}
+
+#bar-container {
+  display: flex;
+  justify-content: space-between;
+  width: 600px;
+  margin: 20px auto;
+}
+
+.box {
+  flex: 1;
+  padding: 9px;
+  text-align: center;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+.box.selected {
+  background-color: #007bff;
+  color: #fff;
+}

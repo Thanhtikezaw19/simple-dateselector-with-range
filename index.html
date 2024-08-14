@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+  <title>Document</title>
+</head>
+<body>
+  <div class="main-container">
+    <div class="second-container row">
+     <div class="left-side-container col-7 .bg-colr border border-primary">
+        <div class="seletor-div d-flex justify-content-between ">
+          <div class="selected-date">
+            <p>12-12-2024</p>
+          </div>
+          <div class="selector">
+            <div class="option-box">
+              <select id="choices">
+                <option value="monthly" class="monthly">月</option>
+                <option value="daily" class="daily">日</option>
+                <option value="yearly" class="yearly">年</option>
+                <option value="fourth_quater" class="fourth-quater">四月年</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="flexible-div border border-primary">
+          <div class="picker">
+            <div id="content">
+              <div id="monthly">
+                <div id="bar-container">
+                  <div class="box" data-value="1"></div>
+                  <div class="box" data-value="2"></div>
+                  <div class="box" data-value="3"></div>
+                  <div class="box" data-value="4"></div>
+                  <div class="box" data-value="5"></div>
+                  <div class="box" data-value="6"></div>
+                  <div class="box" data-value="7"></div>
+                  <div class="box" data-value="8"></div>
+                  <div class="box" data-value="9"></div>
+                  <div class="box" data-value="10"></div>
+                  <div class="box" data-value="11"></div>
+                  <div class="box" data-value="12"></div>
+                </div>
+              </div>
+              <div id="daily" class="hidden">
+                This is Daily DIV
+              </div>
+              <div id="yearly" class="hidden">
+                This is Yearly DIV
+              </div>
+              <div id="fourth_quater" class="hidden">
+                This is Fourth Quater Div
+              </div>
+            </div>
+          </div>
+        </div>
+     </div>
+     <div class="right-side-container col-5 .bg-colr border border-primary">
+      <div id="bar-container">
+        <div class="box" data-value="1">1</div>
+        <div class="box" data-value="2">2</div>
+        <div class="box" data-value="3">3</div>
+        <div class="box" data-value="4">4</div>
+        <div class="box" data-value="5">5</div>
+        <div class="box" data-value="6">6</div>
+        <div class="box" data-value="7">7</div>
+        <div class="box" data-value="8">8</div>
+        <div class="box" data-value="9">9</div>
+        <div class="box" data-value="10">10</div>
+        <div class="box" data-value="11">11</div>
+        <div class="box" data-value="12">12</div>
+      </div>
+     </div>
+    </div>
+  </div>
+</body>
+<script src="index.js"></script>
+</html>

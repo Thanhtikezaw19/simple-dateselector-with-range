@@ -18,6 +18,32 @@ document.addEventListener('DOMContentLoaded', function() {
   divs.forEach(div => div.style.display = 'none');
 });
 
+///////////////// for div
+
+const startDate = 2022; // Start year from API
+const endDate = 2024; // End year from API
+
+const barContainer = document.getElementById('bar-container');
+
+for (let year = startDate; year <= endDate; year++) {
+  for (let month = 1; month <= 12; month++) {
+    const boxContainer = document.createElement('div');
+    boxContainer.className = 'box-container';
+
+    const numberDiv = document.createElement('div');
+    numberDiv.className = 'number';
+    numberDiv.innerText = `${month}`;
+
+    const boxDiv = document.createElement('div');
+    boxDiv.className = 'box';
+    boxDiv.dataset.value = `${year}-${month}`;
+
+    boxContainer.appendChild(numberDiv);
+    boxContainer.appendChild(boxDiv);
+    barContainer.appendChild(boxContainer);
+  }
+}
+
 const boxes = document.querySelectorAll('.box');
 let isDragging = false;
 let startIndex = null;

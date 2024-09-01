@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company and Building Details</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .company-row {
+            font-weight: bold;
+            background-color: #f9f9f9;
+        }
+        .details-row {
+            display: none; /* Initially hide the detail rows */
+        }
+        .show {
+            display: table-row;
+        }
+        .toggle-btn, .building-toggle-btn {
+            cursor: pointer;
+            font-weight: bold;
+            padding-right: 10px;
+        }
+        .toggle-btn::before {
+            content: '-';
+        }
+        .toggle-btn.collapsed::before {
+            content: '+';
+        }
+        .building-toggle-btn::before {
+            content: '-';
+        }
+        .building-toggle-btn.collapsed::before {
+            content: '+';
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Company Name</th>
+                <th>Building Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Setting</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- The table body will be populated by JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        const data = [
+            {
+                companyId: 1102,
+                companyName: 'ABC Corp',
+                buildings: [
+                    {
+                        buildingName: 'Building 1',
+                        details: [
+                            {
+                                startDate: '2023-01-01',
+                                endDate: '2023-12-31',
+                                setting: 'Configuration 1',
+                                amount: 1000
+                            },
+                            {
+                                startDate: '2023-02-01',
+                                endDate: '2023-11-30',
+                                setting: 'Configuration 2',
+                                amount: 1200
+                            }
+                        ]
+                    },
+                    {
+                        buildingName: 'Building 2',
+                        details: [
+                            {
+                                startDate: '2023-02-01',
+                                endDate: '2023-11-30',
+                                setting: 'Configuration 3',
+                                amount: 1500
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                companyId: 1302,
+                companyName: 'XYZ Ltd',
+                buildings: [
+                    {
+                        buildingName: 'Building 3',
+                        details: [
+                            {
+                                startDate: '2024-02-01',
+                                endDate: '2024-11-30',
+                                setting: 'Configuration 4',
+                                amount: 2000
+                            },
+                            {
+                                startDate: '2024-03-01',
+                                endDate: '2024-10-30',
+                                setting: 'Configuration 5',
+                                amount: 2500
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        const tableBody = document.querySelector('tbody');
+
+        data.forEach((company) => {
+            company.buildings.forEach((building) => {
+                // Create the row for the company
+                const companyBuildingRow = document.createElement('tr');
+                const rowspan = building.details.length + 1; // +1 for the building row itself
+                companyBuildingRow.classList.add('company-row');
+                companyBuildingRow.innerHTML = `
+                    <td rowspan="${rowspan}">
+                        <span class="toggle-btn" data-company-id="${company.companyId}"></span>
+                        ${company.companyName}
+                    </td>
+                    <td rowspan="${rowspan}">
+                        <span class="building-toggle-btn" data-building="${building.buildingName}"></span>
+                        ${building.buildingName}
+                    </td>
+                    <td>${building.details[0].startDate}</td>
+                    <td>${building.details[0].endDate}</td>
+                    <td>${building.details[0].setting}</td>
+                    <td>${building.details[0].amount}</td>
+                `;
+                tableBody.appendChild(companyBuildingRow);
+
+                // Add detail rows for this building
+                building.details.slice(1).forEach((detail) => {
+                    const detailRow = document.createElement('tr');
+                    detailRow.classList.add('details-row');
+                    detailRow.dataset.companyId = company.companyId;
+                    detailRow.dataset.buildingName = building.buildingName;
+                    detailRow.innerHTML = `
+                        <td></td> <!-- Empty cell for alignment -->
+                        <td></td> <!-- Empty cell for alignment -->
+                        <td>${detail.startDate}</td>
+                        <td>${detail.endDate}</td>
+                        <td>${detail.setting}</td>
+                        <td>${detail.amount}</td>
+                    `;
+                    tableBody.appendChild(detailRow);
+                });
+            });
+        });
+
+        // Handle company toggle buttons
+        document.querySelectorAll('.toggle-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const companyId = btn.dataset.companyId;
+                const rows = document.querySelectorAll(`.details-row[data-company-id="${companyId}"]`);
+
+                rows.forEach(row => {
+                    row.classList.toggle('show');
+                });
+
+                btn.classList.toggle('collapsed');
+            });
+        });
+
+        // Handle building toggle buttons
+        document.querySelectorAll('.building-toggle-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const buildingName = btn.dataset.building;
+                const rows = document.querySelectorAll(`.details-row[data-building-name="${buildingName}"]`);
+
+                rows.forEach(row => {
+                    row.classList.toggle('show');
+                });
+
+                btn.classList.toggle('collapsed');
+            });
+        });
+
+        // Initially show all building rows
+        document.querySelectorAll('.details-row').forEach(row => {
+            row.classList.add('show');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company and Building Toggle</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        th,
+        td {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .company-name-cell,
+        .building-name-cell {
+            background-color: #f9f9f9;
+            font-weight: bold;
+        }
+
+        .toggle-btn {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <table id="dataTable">
+        <thead>
+            <tr>
+                <th>CompanyName</th>
+                <th>BuildingName</th>
+                <th>StartDate</th>
+                <th>EndDate</th>
+                <th>Setting</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dynamic Rows Will Be Injected Here -->
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const data = [
+                {
+                    companyId: 1102,
+                    companyName: 'ABC Corp',
+                    buildings: [
+                        {
+                            buildingName: 'Building 1',
+                            details: [
+                                {
+                                    startDate: '2023-01-01',
+                                    endDate: '2023-12-31',
+                                    setting: 'Configuration 1',
+                                    amount: 1000
+                                },
+                                {
+                                    startDate: '2023-02-01',
+                                    endDate: '2023-11-30',
+                                    setting: 'Configuration 2',
+                                    amount: 1200
+                                }
+                            ]
+                        },
+                        {
+                            buildingName: 'Building 2',
+                            details: [
+                                {
+                                    startDate: '2023-02-01',
+                                    endDate: '2023-11-30',
+                                    setting: 'Configuration 3',
+                                    amount: 1500
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    companyId: 1103,
+                    companyName: 'XYZ Ltd',
+                    buildings: [
+                        {
+                            buildingName: 'Building 3',
+                            details: [
+                                {
+                                    startDate: '2024-02-01',
+                                    endDate: '2024-11-30',
+                                    setting: 'Configuration 4',
+                                    amount: 2000
+                                },
+                                {
+                                    startDate: '2024-03-01',
+                                    endDate: '2024-10-30',
+                                    setting: 'Configuration 5',
+                                    amount: 2500
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ];
+
+            const tableBody = document.querySelector('#dataTable tbody');
+
+            // Create rows dynamically
+            data.forEach(company => {
+                const { companyName, buildings } = company;
+                buildings.forEach((building, buildingIndex) => {
+                    building.details.forEach((detail, detailIndex) => {
+                        const row = document.createElement('tr');
+                        row.dataset.companyName = companyName;
+                        row.dataset.buildingName = building.buildingName;
+
+                        // Create Company Name cell
+                        if (detailIndex === 0 && buildingIndex === 0) {
+                            const companyCell = document.createElement('td');
+                            companyCell.classList.add('company-name-cell');
+                            companyCell.rowSpan = buildings.reduce((acc, b) => acc + b.details.length, 0);
+                            companyCell.innerHTML = `
+                                <input type="checkbox" class="toggle-btn company-toggle-btn" data-company-name="${companyName}">
+                                ${companyName}
+                            `;
+                            row.appendChild(companyCell);
+                        } else {
+                            const emptyCell = document.createElement('td');
+                            emptyCell.classList.add('hidden');
+                            row.appendChild(emptyCell);
+                        }
+
+                        // Create Building Name cell
+                        if (detailIndex === 0) {
+                            const buildingCell = document.createElement('td');
+                            buildingCell.classList.add('building-name-cell');
+                            buildingCell.rowSpan = building.details.length;
+                            buildingCell.innerHTML = `
+                                <input type="checkbox" class="toggle-btn building-toggle-btn" data-building-name="${building.buildingName}">
+                                ${building.buildingName}
+                            `;
+                            row.appendChild(buildingCell);
+                        } else {
+                            const emptyCell = document.createElement('td');
+                            emptyCell.classList.add('hidden');
+                            row.appendChild(emptyCell);
+                        }
+
+                        // Create other cells
+                        const startDateCell = document.createElement('td');
+                        startDateCell.classList.add('start-date-cell');
+                        startDateCell.textContent = detail.startDate;
+                        startDateCell.dataset.originalStartDate = detail.startDate;
+                        row.appendChild(startDateCell);
+
+                        const endDateCell = document.createElement('td');
+                        endDateCell.classList.add('end-date-cell');
+                        endDateCell.textContent = detail.endDate;
+                        endDateCell.dataset.originalEndDate = detail.endDate;
+                        row.appendChild(endDateCell);
+
+                        const settingCell = document.createElement('td');
+                        settingCell.classList.add('setting-cell');
+                        settingCell.textContent = detail.setting;
+                        settingCell.dataset.originalSetting = detail.setting;
+                        row.appendChild(settingCell);
+
+                        const amountCell = document.createElement('td');
+                        amountCell.classList.add('amount-cell');
+                        amountCell.textContent = detail.amount;
+                        amountCell.dataset.originalAmount = detail.amount;
+                        row.appendChild(amountCell);
+
+                        tableBody.appendChild(row);
+                    });
+                });
+            });
+
+            function updateCompanyRows(companyName, isChecked) {
+                const rows = document.querySelectorAll(`tr[data-company-name="${companyName}"]`);
+                let totalAmount = 0;
+                let combinedSettings = [];
+
+                rows.forEach((row, index) => {
+                    const buildingCell = row.querySelector('.building-name-cell');
+                    const startDateCell = row.querySelector('.start-date-cell');
+                    const endDateCell = row.querySelector('.end-date-cell');
+                    const settingCell = row.querySelector('.setting-cell');
+                    const amountCell = row.querySelector('.amount-cell');
+
+                    if (isChecked) {
+                        if (index === 0) {
+                            startDateCell.innerHTML = ''; // Hide Start Date for aggregated row
+                            endDateCell.innerHTML = ''; // Hide End Date for aggregated row
+                        } else {
+                            row.classList.add('hidden'); // Hide other rows
+                        }
+                        combinedSettings.push(settingCell.dataset.originalSetting);
+                        totalAmount += parseFloat(amountCell.dataset.originalAmount);
+                    } else {
+                        if (index === 0) {
+                            startDateCell.textContent = startDateCell.dataset.originalStartDate; // Restore Start Date
+                            endDateCell.textContent = endDateCell.dataset.originalEndDate; // Restore End Date
+                        }
+                        settingCell.textContent = settingCell.dataset.originalSetting;
+                        amountCell.textContent = amountCell.dataset.originalAmount;
+                        row.classList.remove('hidden');
+                    }
+                });
+
+                if (isChecked && rows.length > 0) {
+                    const firstRow = rows[0];
+                    const firstSettingCell = firstRow.querySelector('td:nth-child(5)');
+                    const firstAmountCell = firstRow.querySelector('td:nth-child(6)');
+
+                    firstSettingCell.textContent = combinedSettings.join(', ');
+                    firstAmountCell.textContent = totalAmount;
+                }
+            }
+
+            function updateBuildingRows(buildingName, isChecked) {
+                const rows = document.querySelectorAll(`tr[data-building-name="${buildingName}"]`);
+                let totalAmount = 0;
+                let combinedSettings = [];
+
+                rows.forEach((row, index) => {
+                    const startDateCell = row.querySelector('.start-date-cell');
+                    const endDateCell = row.querySelector('.end-date-cell');
+                    const settingCell = row.querySelector('.setting-cell');
+                    const amountCell = row.querySelector('.amount-cell');
+
+                    if (isChecked) {
+                        if (index === 0) {
+                            startDateCell.innerHTML = ''; // Hide Start Date for aggregated row
+                            endDateCell.innerHTML = ''; // Hide End Date for aggregated row
+                        } else {
+                            row.classList.add('hidden'); // Hide other rows
+                        }
+                        combinedSettings.push(settingCell.dataset.originalSetting);
+                        totalAmount += parseFloat(amountCell.dataset.originalAmount);
+                    } else {
+                        if (index === 0) {
+                            startDateCell.textContent = startDateCell.dataset.originalStartDate; // Restore Start Date
+                            endDateCell.textContent = endDateCell.dataset.originalEndDate; // Restore End Date
+                        }
+                        settingCell.textContent = settingCell.dataset.originalSetting;
+                        amountCell.textContent = amountCell.dataset.originalAmount;
+                        row.classList.remove('hidden');
+                    }
+                });
+
+                if (isChecked && rows.length > 0) {
+                    const firstRow = rows[0];
+                    const firstSettingCell = firstRow.querySelector('td:nth-child(5)');
+                    const firstAmountCell = firstRow.querySelector('td:nth-child(6)');
+
+                    firstSettingCell.textContent = combinedSettings.join(', ');
+                    firstAmountCell.textContent = totalAmount;
+                }
+            }
+
+            document.querySelectorAll('.company-toggle-btn').forEach(button => {
+                button.addEventListener('change', function () {
+                    const companyName = this.dataset.companyName;
+                    updateCompanyRows(companyName, this.checked);
+                });
+            });
+
+            document.querySelectorAll('.building-toggle-btn').forEach(button => {
+                button.addEventListener('change', function () {
+                    const buildingName = this.dataset.buildingName;
+                    updateBuildingRows(buildingName, this.checked);
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

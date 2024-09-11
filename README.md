@@ -1,6 +1,9 @@
+https://www.excelmojo.com/timeline-in-excel/
+![image](https://github.com/user-attachments/assets/39748b96-1849-43b6-b35c-926414443e45)
+
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
